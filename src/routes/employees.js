@@ -3,8 +3,8 @@ const router = express.Router();
 
 const mysqlConnection = require('../database');
 
-router.get('/', (req, res, next) => {
-    mysqlConnection.query('SELECT * FROM employees', (error, results, fields) => {
+router.get('/', async (req, res, next) => {
+    await mysqlConnection.query('SELECT * FROM employees', (error, results, fields) => {
         if(!error) {
             res.json(results);
         } else {
@@ -13,9 +13,9 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     const { id } = req.params;
-    mysqlConnection.query('SELECT * FROM employees WHERE id = ?', [id], (error, results, fields) => {
+    await mysqlConnection.query('SELECT * FROM employees WHERE id = ?', [id], (error, results, fields) => {
         if(!error) {
             res.json(results[0]);
         } else {
@@ -24,9 +24,9 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
     const { name, salary } = req.body;
-    mysqlConnection.query('INSERT INTO employees SET ?',{
+    await mysqlConnection.query('INSERT INTO employees SET ?',{
         name: name,
         salary: salary
     }, (error, results, fields) => {
@@ -38,10 +38,10 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
     const { id } = req.params;
     const { name, salary } = req.body;
-    mysqlConnection.query('UPDATE employees SET name = ?, salary = ? WHERE id = ?', [name, salary, id], function (error, results, fields) {
+    await mysqlConnection.query('UPDATE employees SET name = ?, salary = ? WHERE id = ?', [name, salary, id], function (error, results, fields) {
         if(!error) {
             res.json({status:'Employeed Updated'});
         } else {
@@ -50,9 +50,9 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
     const { id } = req.params;
-    mysqlConnection.query('DELETE FROM employees WHERE id = ?',[id], (error, results, fields) => {
+    await mysqlConnection.query('DELETE FROM employees WHERE id = ?',[id], (error, results, fields) => {
         if(!error) {
             res.json({status:'Employeed Deleted'});
         } else {
