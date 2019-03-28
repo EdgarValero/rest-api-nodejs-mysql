@@ -1,64 +1,36 @@
 const express = require('express');
 const router = express.Router();
+const employeesController = require('../controllers/employees.controller');
 
-const mysqlConnection = require('../database');
 
-router.get('/', (req, res, next) => {
-    mysqlConnection.query('SELECT * FROM employees', (error, results, fields) => {
-        if(!error) {
-            res.json(results);
-        } else {
-            console.log(err);
-        }
-    });
+router.get('/', async (req, res, next) => {
+    let employees = await employeesController.getEmployees();
+    res.send(employees);
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     const { id } = req.params;
-    mysqlConnection.query('SELECT * FROM employees WHERE id = ?', [id], (error, results, fields) => {
-        if(!error) {
-            res.json(results[0]);
-        } else {
-            console.log(error);
-        }
-    });
+    let employeed = await employeesController.getEmployeed(id);
+    res.send(employeed[0]);
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
     const { name, salary } = req.body;
-    mysqlConnection.query('INSERT INTO employees SET ?',{
-        name: name,
-        salary: salary
-    }, (error, results, fields) => {
-        if(!error) {
-            res.json({status:'Employeed Saved'});
-        } else {
-            console.log(error);
-        }
-    });
+    await employeesController.addEmployeed(name,salary);
+    res.json({status: 'Employeed Saved'}); 
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
     const { id } = req.params;
     const { name, salary } = req.body;
-    mysqlConnection.query('UPDATE employees SET name = ?, salary = ? WHERE id = ?', [name, salary, id], function (error, results, fields) {
-        if(!error) {
-            res.json({status:'Employeed Updated'});
-        } else {
-            console.log(error);
-        }
-    });
+    await employeesController.updateEmployeed(id,name,salary);
+    res.json({status:'Employeed Updated'});
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
     const { id } = req.params;
-    mysqlConnection.query('DELETE FROM employees WHERE id = ?',[id], (error, results, fields) => {
-        if(!error) {
-            res.json({status:'Employeed Deleted'});
-        } else {
-            console.log(error);
-        }
-    });
+    await employeesController.deleteEmployeed(id);
+    res.json({status:'Employeed Deleted'});
 });
 
 module.exports = router;
