@@ -12,7 +12,9 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "mysql": "^2.16.0"
+    "morgan": "^1.9.1",
+    "mysql": "^2.16.0",
+    "remove": "^0.1.5"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"

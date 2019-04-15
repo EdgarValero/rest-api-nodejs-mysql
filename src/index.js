@@ -1,14 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
+const morgan = require('morgan');
 
 //Settings
 app.set('port', process.env.PORT || 3000);
 
 //Middlewares
+app.use(morgan('dev'));
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
 
 //Routes
 app.use(require('./routes/employees'));
